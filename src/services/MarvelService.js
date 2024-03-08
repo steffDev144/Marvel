@@ -9,7 +9,6 @@ class MarvelService {
     _ts = Number(new Date());
     _hash = md5(this._ts + this._privateKey + this._publicKey);
     getResource = async (url) => {
-    console.log(url)
         const res = await axios.get(url);
 
         if(res.status !== 200) {
@@ -23,10 +22,21 @@ class MarvelService {
     getAllCharacters = () => {
         return this.getResource(`${this._apiBase}characters?limit=9&offset=210&ts=${this._ts}&apikey=${this._publicKey}&hash${this._hash}`);
     }
-    getCharacter = (id) => {
-        return this.getResource(`${this._apiBase}characters/${id}?ts=${this._ts}&apikey=${this._publicKey}&hash${this._hash}`);
+
+    getCharacter = async (id) => {
+        const res = await this.getResource(`${this._apiBase}characters/${id}?ts=${this._ts}&apikey=${this._publicKey}&hash${this._hash}`);
+        return this._transformCharacter(res.data.data.results[0]);
     }
 
+    _transformCharacter = (res) => {
+        return {
+            name: res.name,
+            description: res.description,
+            thumbnail: res.thumbnail.path + '.' + res.thumbnail.extension,
+            homepage: res.urls[0].url,
+            wiki: res.urls[1].url
+        }
+    }
 }
 
 export  default MarvelService;
