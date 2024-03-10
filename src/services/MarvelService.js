@@ -19,8 +19,9 @@ class MarvelService {
         return res;
     }
 
-    getAllCharacters = () => {
-        return this.getResource(`${this._apiBase}characters?limit=9&offset=210&ts=${this._ts}&apikey=${this._publicKey}&hash${this._hash}`);
+    getAllCharacters = async () => {
+        const res = await this.getResource(`${this._apiBase}characters?limit=9&offset=210&ts=${this._ts}&apikey=${this._publicKey}&hash=${this._hash}`);
+        return res.data.data.results.map(this._transformCharacter);
     }
 
     getCharacter = async (id) => {
@@ -29,9 +30,14 @@ class MarvelService {
     }
 
     _transformCharacter = (res) => {
+        const text = res.description;
+        let sliced = text.slice(0, 228);
+        if (sliced.length < text.length) {
+            sliced += '...';
+        }
         return {
             name: res.name,
-            description: res.description,
+            description: sliced || "К сожелению описание для данного персонажа отсутствует.",
             thumbnail: res.thumbnail.path + '.' + res.thumbnail.extension,
             homepage: res.urls[0].url,
             wiki: res.urls[1].url
