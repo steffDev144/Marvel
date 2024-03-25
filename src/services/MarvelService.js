@@ -8,6 +8,8 @@ class MarvelService {
     _privateKey = "102c7d8fb0cee26cc6c3cc9d4aa3316ffc47e9ca";
     _ts = Number(new Date());
     _hash = md5(this._ts + this._privateKey + this._publicKey);
+    _baseOffset = 210;
+
     getResource = async (url) => {
         const res = await axios.get(url);
 
@@ -19,8 +21,8 @@ class MarvelService {
         return res;
     }
 
-    getAllCharacters = async () => {
-        const res = await this.getResource(`${this._apiBase}characters?limit=9&offset=210&ts=${this._ts}&apikey=${this._publicKey}&hash=${this._hash}`);
+    getAllCharacters = async (offset = this._baseOffset) => {
+        const res = await this.getResource(`${this._apiBase}characters?limit=9&offset=${offset}&ts=${this._ts}&apikey=${this._publicKey}&hash=${this._hash}`);
         return res.data.data.results.map(this._transformCharacter);
     }
 

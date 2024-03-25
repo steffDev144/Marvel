@@ -20,6 +20,10 @@ class CharList extends Component {
         this.updateCharList();
     }
 
+    onRequest = (offset) => {
+
+    }
+
     onCharListLoaded = (chars) => {
         this.setState({chars, loading: false});
     }
