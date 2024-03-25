@@ -31,16 +31,18 @@ class MarvelService {
 
     _transformCharacter = (res) => {
         const text = res.description;
-        let sliced = text.slice(0, 228);
+        let sliced = text.slice(0, 210);
         if (sliced.length < text.length) {
             sliced += '...';
         }
         return {
+            id: res.id,
             name: res.name,
-            description: sliced || "К сожелению описание для данного персонажа отсутствует.",
+            description: sliced || "Unfortunately, there is no description for this character.",
             thumbnail: res.thumbnail.path + '.' + res.thumbnail.extension,
             homepage: res.urls[0].url,
-            wiki: res.urls[1].url
+            wiki: res.urls[1].url,
+            comics: res.comics.items
         }
     }
 }
